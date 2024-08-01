@@ -13,7 +13,7 @@ class Barang extends Model
 
     protected $fillable = [
         'kode',
-        'name',
+        'nama',
         'harga'
     ];
 }
