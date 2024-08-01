@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\BarangController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\SalesController;
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +22,12 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::apiResource('barang', BarangController::class);
-Route::apiResource('customer', CustomerController::class);
+Route::post('/login', AuthController::class);
 
-Route::get('/transactions', [SalesController::class, 'getTransaction']);
-Route::post('/transactions', [SalesController::class, 'storeTransaction']);
+Route::middleware('auth:api')->group(function() {
+    Route::apiResource('barang', BarangController::class);
+    Route::apiResource('customer', CustomerController::class);
+    
+    Route::get('/transactions', [SalesController::class, 'getTransaction']);
+    Route::post('/transactions', [SalesController::class, 'storeTransaction']);
+});
