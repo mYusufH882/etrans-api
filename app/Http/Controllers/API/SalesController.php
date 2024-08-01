@@ -12,13 +12,32 @@ use Illuminate\Validation\ValidationException;
 
 class SalesController extends Controller
 {
-    public function getTransaction()
+    public function getTransaction(Request $request)
     {
+        $filters = $request->all();
         $sale = Sales::query();
 
-        // if(isset($filters['query'])) {
-        //     $sale->where('');
+        // if (isset($filters['customer_name'])) {
+        //     $sale->whereHas('customer', function($query) use ($filters) {
+        //         $query->where('name', 'like', '%' . $filters['customer_name'] . '%');
+        //     });
         // }
+    
+        // if (isset($filters['date_from']) && isset($filters['date_to'])) {
+        //     $sale->whereBetween('tgl', [$filters['date_from'], $filters['date_to']]);
+        // }
+
+        if(isset($filters['query'])) {
+            $sale->where(function($query) use ($filters) {
+                $query->where('kode', 'like', '%' . $filters['query'] . '%')
+                    ->orWhereHas('customer', function($q) use ($filters) {
+                        $q->where('name', 'like', '%' . $filters['query'] . '%');
+                    })
+                    ->orWhereHas('details.barang', function($q) use ($filters) {
+                        $q->where('nama', 'like', '%' . $filters['query'] . '%');
+                    });
+            });
+        }
 
         $sales = $sale->with('customer', 'details.barang')->get();
 
