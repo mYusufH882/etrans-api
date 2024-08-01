@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\BarangController;
 use App\Http\Controllers\API\CustomerController;
+use App\Http\Controllers\API\SalesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('barang', BarangController::class);
 Route::apiResource('customer', CustomerController::class);
+
+Route::get('/transactions', [SalesController::class, 'getTransaction']);
+Route::post('/transactions', [SalesController::class, 'storeTransaction']);

@@ -7,6 +7,7 @@ use App\Models\Barang;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class BarangController extends Controller
@@ -53,6 +54,14 @@ class BarangController extends Controller
                 'message' => 'Barang berhasil dibuat.',
                 'data' => $barang
             ]);
+        }  catch(ValidationException $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => 422,
+                'message' => 'Internal Server Error.',
+                'error' => $e->errors()
+            ], 422);
         } catch(Exception $e) {
             DB::rollBack();
             
@@ -89,6 +98,14 @@ class BarangController extends Controller
                 'message' => 'Barang berhasil diubah.',
                 'data' => $barang
             ]);
+        }  catch(ValidationException $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => 422,
+                'message' => 'Internal Server Error.',
+                'error' => $e->errors()
+            ], 422);
         } catch(Exception $e) {
             DB::rollBack();
             

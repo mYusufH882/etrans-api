@@ -16,12 +16,13 @@ return new class extends Migration
             $table->string('kode');
             $table->dateTime('tgl');
             $table->integer('cust_id');
-            // $table->foreign();
             $table->decimal('subtotal', 15, 2);
             $table->decimal('diskon', 15, 2);
             $table->decimal('ongkir', 15, 2);
             $table->decimal('total_bayar', 15, 2);
             $table->timestamps();
+
+            $table->foreign('cust_id')->references('id')->on('m_customer');
         });
     }
 

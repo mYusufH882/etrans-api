@@ -21,4 +21,14 @@ class Sales_Det extends Model
         'harga_diskon',
         'total'
     ];
+
+    public function sale()
+    {
+        return $this->belongsTo(Sales::class, 'sales_id');
+    }
+
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class);
+    }
 }

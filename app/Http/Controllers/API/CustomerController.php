@@ -7,6 +7,7 @@ use App\Models\Customer;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CustomerController extends Controller
 {
@@ -58,6 +59,14 @@ class CustomerController extends Controller
                 'message' => 'Customer berhasil ditambahkan.',
                 'data' => $customer
             ]);
+        }  catch(ValidationException $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => 422,
+                'message' => 'Internal Server Error.',
+                'error' => $e->errors()
+            ], 422);
         } catch(Exception $e) {
             DB::rollBack();
 
@@ -99,6 +108,14 @@ class CustomerController extends Controller
                 'message' => 'Customer berhasil diubah.',
                 'data' => $customer
             ]);
+        }  catch(ValidationException $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => 422,
+                'message' => 'Internal Server Error.',
+                'error' => $e->errors()
+            ], 422);
         } catch(Exception $e) {
             DB::rollBack();
 
