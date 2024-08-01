@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('t_sales_det', function (Blueprint $table) {
             $table->id();
+            $table->integer('sales_id');
+            // $table->foreign();
+            $table->integer('barang_id');
+            // $table->foreign();
+            $table->decimal('harga_brandol', 15, 2);
+            $table->integer('qty');
+            $table->decimal('diskon_pct', 15, 2);
+            $table->decimal('diskon_nilai', 15, 2);
+            $table->decimal('harga_diskon', 15, 2);
+            $table->decimal('total', 15, 2);
             $table->timestamps();
         });
     }
