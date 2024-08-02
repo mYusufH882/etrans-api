@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -33,5 +34,14 @@ class AuthController extends Controller
             'user'    => auth()->guard('api')->user(),    
             'token'   => $token   
         ], 200);
+    }
+
+    public function logout()
+    {
+        Auth::guard('api')->logout();
+
+        return response()->json([
+            'message' => 'Successfully logged out !!!'
+        ]);
     }
 }

@@ -30,4 +30,6 @@ Route::middleware('auth:api')->group(function() {
     
     Route::get('/transactions', [SalesController::class, 'getTransaction']);
     Route::post('/transactions', [SalesController::class, 'storeTransaction']);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
