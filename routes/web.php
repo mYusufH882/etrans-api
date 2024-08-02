@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::any('{any}', function () {
+    return response()->json([
+        'status' => 401,
+        'message' => 'Unauthorized'
+    ]);
+})->where('any', '.*')->middleware(['throttle:120,1', 'api.auth']);
