@@ -36,6 +36,11 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function userProfile()
+    {
+        return response()->json(Auth::user());
+    }
+
     public function logout()
     {
         Auth::guard('api')->logout();

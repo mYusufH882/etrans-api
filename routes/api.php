@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', AuthController::class);
 
 Route::middleware('auth:api')->group(function() {
+    Route::get('/user', [AuthController::class, 'userProfile']);
+
     Route::apiResource('barang', BarangController::class);
     Route::apiResource('customer', CustomerController::class);
     

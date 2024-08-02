@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class CustomerController extends Controller
 {
@@ -77,6 +78,25 @@ class CustomerController extends Controller
             ]);
         }
     }
+
+    public function show(string $id)
+    {
+        $customers = Customer::find($id);
+        
+        if(!$customers) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Customer tidak ditemukan !'
+            ], 401);
+        } else {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Customer Ditemukan.',
+                'data' => $customers
+            ], 200);
+        }
+
+    } 
 
     /**
      * Update the specified resource in storage.
