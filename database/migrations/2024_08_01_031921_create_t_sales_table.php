@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('t_sales', function (Blueprint $table) {
             $table->id();
+            $table->string('kode');
+            $table->dateTime('tgl');
+            $table->integer('cust_id');
+            $table->decimal('subtotal', 15, 2);
+            $table->decimal('diskon', 15, 2);
+            $table->decimal('ongkir', 15, 2);
+            $table->decimal('total_bayar', 15, 2);
             $table->timestamps();
+
+            $table->foreign('cust_id')->references('id')->on('m_customer');
         });
     }
 
