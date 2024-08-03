@@ -45,13 +45,13 @@ class CustomerController extends Controller
                 'name' => 'required|string|max:100',
                 'telp' => 'required|string|max:20'
             ]);
-    
+
             $data = [
                 'kode' => $request->kode,
                 'name' => $request->name,
                 'telp' => $request->telp,
             ];
-    
+
             DB::commit();
             $customer = Customer::create($data);
 
@@ -60,15 +60,15 @@ class CustomerController extends Controller
                 'message' => 'Customer berhasil ditambahkan.',
                 'data' => $customer
             ]);
-        }  catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             DB::rollBack();
-            
+
             return response()->json([
                 'status' => 422,
                 'message' => 'Internal Server Error.',
                 'error' => $e->errors()
             ], 422);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
 
             return response()->json([
@@ -82,8 +82,8 @@ class CustomerController extends Controller
     public function show(string $id)
     {
         $customers = Customer::find($id);
-        
-        if(!$customers) {
+
+        if (!$customers) {
             return response()->json([
                 'status' => 400,
                 'message' => 'Customer tidak ditemukan !'
@@ -95,8 +95,7 @@ class CustomerController extends Controller
                 'data' => $customers
             ], 200);
         }
-
-    } 
+    }
 
     /**
      * Update the specified resource in storage.
@@ -107,13 +106,13 @@ class CustomerController extends Controller
 
         try {
             $customer = Customer::find($id);
-            
+
             $request->validate([
-                'kode' => 'unique:m_customer|max:10',
+                'kode' => 'string|max:10',
                 'name' => 'string|max:100',
                 'telp' => 'string|max:20'
             ]);
-    
+
             $data = [
                 'kode' => $request->kode,
                 'name' => $request->name,
@@ -128,15 +127,15 @@ class CustomerController extends Controller
                 'message' => 'Customer berhasil diubah.',
                 'data' => $customer
             ]);
-        }  catch(ValidationException $e) {
+        } catch (ValidationException $e) {
             DB::rollBack();
-            
+
             return response()->json([
                 'status' => 422,
                 'message' => 'Internal Server Error.',
                 'error' => $e->errors()
             ], 422);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
 
             return response()->json([
@@ -159,13 +158,13 @@ class CustomerController extends Controller
 
             DB::commit();
             $customer->delete();
-            
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Customer berhasil dihapus.',
                 'data' => $customer
             ]);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
 
             return response()->json([

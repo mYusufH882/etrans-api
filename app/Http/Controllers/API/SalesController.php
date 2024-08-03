@@ -51,7 +51,7 @@ class SalesController extends Controller
             $item->nama_customer = $item->customer->name;
 
             $item->details->each(function($detail) {
-                $detail->makeHidden(['id', 'sales_id', 'barang_id', 'qty', 'harga_bandrol', 'diskon_pct', 'diskon_nilai', 'harga_diskon', 'barang', 'created_at', 'updated_at']);
+                $detail->makeHidden(['qty', 'harga_bandrol', 'diskon_pct', 'diskon_nilai', 'harga_diskon', 'barang', 'created_at', 'updated_at']);
                 $detail->jumlah_barang = $detail->qty;
             });
         });
@@ -69,6 +69,7 @@ class SalesController extends Controller
 
         try {
             $request->validate([
+                'kode' => 'unique:t_sales,kode|required|string',
                 'tgl' => 'required|date',
                 'cust_id' => 'required|exists:m_customer,id',
                 'details' => 'required|array',
@@ -86,7 +87,8 @@ class SalesController extends Controller
             ]);
 
             $sale = new Sales();
-            $sale->kode = Sales::generateCode($request->tgl);
+            // $sale->kode = Sales::generateCode($request->tgl);
+            $sale->kode = $request->kode;
             $sale->tgl = $request->tgl;
             $sale->cust_id = $request->cust_id;
             $sale->subtotal = $request->subtotal;
@@ -132,5 +134,22 @@ class SalesController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    public function getLastTransactionNumber()
+    {
+        $lastTransaction = Sales::orderBy('created_at', 'DESC')->first();
+
+        if($lastTransaction) {
+            $lastNumber = $lastTransaction->kode;
+        } else {
+            $lastNumber = null;
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Berhasil Mendapatkan Nomor Transaksi Terakhir',
+            'data' => $lastNumber
+        ]);
     }
 }
