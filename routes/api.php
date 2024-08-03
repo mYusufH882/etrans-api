@@ -33,5 +33,7 @@ Route::middleware('auth:api')->group(function() {
     Route::get('/transactions', [SalesController::class, 'getTransaction']);
     Route::post('/transactions', [SalesController::class, 'storeTransaction']);
 
+    Route::get('/last-transaction-number', [SalesController::class, 'getLastTransactionNumber']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });
