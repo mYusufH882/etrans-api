@@ -74,6 +74,24 @@ class BarangController extends Controller
 
     }
 
+    public function show(string $id)
+    {
+        $barangs = Barang::find($id);
+        if(!$barangs)  {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Barang tidak ditemukan !'
+            ], 401);
+        } else {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Barang Ditemukan.',
+                'data' => $barangs
+            ], 200);
+        }
+
+    } 
+
     /**
      * Update the specified resource in storage.
      */
