@@ -19,8 +19,11 @@ class ExampleTest extends TestCase
 
         $token = JWTAuth::fromUser($user);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)->get('/user');
+        $this->assertNotEmpty($token, 'JWT Token generation failed.');
+        echo "Generated JWT Token: " . $token . "\n";
 
+        $response = $this->withHeader('Authorization', "Bearer {$token}")->get('/api/user');
+        
         $response->assertStatus(200);
     }
 }
