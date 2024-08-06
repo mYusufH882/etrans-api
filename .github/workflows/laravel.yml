@@ -42,6 +42,7 @@ jobs:
           echo "DB_DATABASE=etrans" >> .env
           echo "DB_USERNAME=postgres" >> .env
           echo "DB_PASSWORD=postgres" >> .env
+          echo "JWT_SECRET=$(php artisan jwt:secret --force)" >> .env
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Generate key
@@ -51,7 +52,10 @@ jobs:
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
       - name: Wait for PostgreSQL to be ready
-        run: sleep 30
+        run: |
+          while ! pg_isready -h 127.0.0.1 -p 5432 > /dev/null 2>&1; do
+            sleep 1
+          done
       - name: Create Database
         run: |
           php artisan migrate --force
