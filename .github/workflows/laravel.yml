@@ -8,7 +8,6 @@ on:
 
 jobs:
   laravel-tests:
-
     runs-on: ubuntu-20.04
 
     services:
@@ -20,42 +19,42 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
-      with:
-        php-version: '8.2-fpm'
-        extension: mbstring, intl, pdo_pgsql, pgsql
-        coverage: none
-        
-    - uses: actions/checkout@v4
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: Set Environment Variables
-      run: |
-        echo "DB_CONNECTION=pgsql" >> .env
-        echo "DB_PORT=5432" >> .env
-        echo "DB_HOST=postgres" >> .env
-        echo "DB_DATABASE=etrans" >> .env
-        echo "DB_USERNAME=postgres" >> .env
-        echo "DB_PASSWORD=postgres" >> .env
-    - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    - name: Generate key
-      run: php artisan key:generate
-    - name: Generate Token JWT Auth
-      run: php artisan jwt:secret
-    - name: Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache
-    - name: Create Database
-      run: |
-        php artisan migrate --force
-        php artisan db:seed --class=UserSeeder
-    - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
-      env:
-        DB_CONNECTION: pgsql
-        DB_PORT: 5432
-        DB_DATABASE: etrans
-        DB_USERNAME: postgres
-        DB_PASSWORD: postgres
-      run: php artisan test
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_pgsql, pgsql
+
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Set Environment Variables
+        run: |
+          echo "DB_CONNECTION=pgsql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_DATABASE=etrans" >> .env
+          echo "DB_USERNAME=postgres" >> .env
+          echo "DB_PASSWORD=postgres" >> .env
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Generate key
+        run: php artisan key:generate
+      - name: Generate Token JWT Auth
+        run: php artisan jwt:secret
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+      - name: Wait for PostgreSQL to be ready
+        run: sleep 30
+      - name: Create Database
+        run: |
+          php artisan migrate --force
+          php artisan db:seed --class=UserSeeder
+      - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
+        run: php artisan test
