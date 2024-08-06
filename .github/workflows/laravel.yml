@@ -25,6 +25,7 @@ jobs:
       run: |
         echo "DB_CONNECTION=pgsql" >> .env
         echo "DB_PORT=5432" >> .env
+        echo "DB_HOST=postgres" >> .env
         echo "DB_DATABASE=etrans" >> .env
         echo "DB_USERNAME=postgres" >> .env
         echo "DB_PASSWORD=postgres" >> .env
