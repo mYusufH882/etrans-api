@@ -62,7 +62,6 @@ jobs:
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         run: php artisan test
       - name: Deploy to VPS
-        if: ${{ secrets.SSH_APP == 'BACKEND' }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -73,11 +72,9 @@ jobs:
             cd /home/yusufprog/apps/etrans-api
             git pull origin master
             git status
-            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
-            php artisan migrate --force
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
+            docker-compose run --rm php php artisan migrate --force
+            docker-compose run --rm php php artisan config:cache
+            docker-compose run --rm php php artisan route:cache
+            docker-compose run --rm php php artisan view:cache
             docker-compose down
-            docker-compose build
             docker-compose up -d
