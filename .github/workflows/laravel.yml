@@ -62,7 +62,7 @@ jobs:
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         run: php artisan test
       - name: Deploy to VPS
-        if: ${{ github.event.inputs.deploy == 'backend' }}
+        if: ${{ secrets.SSH_APP == 'BACKEND' }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
