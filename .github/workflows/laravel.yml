@@ -62,7 +62,20 @@ jobs:
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         run: php artisan test
       - name: Deploy to VPS
-        run: |
-          echo "$SSH_PRIVATE_KEY" > deploy_key
-          chmod 600 deploy_key
-          ssh -o StrictHostKeyChecking=no -i deploy_key yusufprog@103.174.114.45 'bash -s' < /home/yusufprog/apps/deploy-be.sh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: 22
+          script: |
+            cd /home/yusufprog/apps/etrans-api
+            git pull origin master
+            git status
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            docker-compose down
+            docker-compose build
+            docker-compose up -d
