@@ -72,7 +72,6 @@ jobs:
             cd /home/yusufprog/apps/etrans-api
             git pull origin master
             git status
-            docker-compose run --rm php php artisan migrate --force
             docker-compose run --rm php php artisan config:cache
             docker-compose run --rm php php artisan route:cache
             docker-compose run --rm php php artisan view:cache
