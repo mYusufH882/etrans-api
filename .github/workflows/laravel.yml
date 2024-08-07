@@ -61,3 +61,8 @@ jobs:
           php artisan db:seed --class=UserSeeder
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         run: php artisan test
+      - name: Deploy to VPS
+        run: |
+          echo "$SSH_PRIVATE_KEY" > deploy_key
+          chmod 600 deploy_key
+          ssh -o StrictHostKeyChecking=no -i deploy_key $SSH_USERNAME@$SSH_HOST 'bash -s' < /home/yusufprog/apps/etrans-api/deploy-be.sh
