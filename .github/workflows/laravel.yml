@@ -73,11 +73,9 @@ jobs:
             cd /home/yusufprog/apps/etrans-api
             git pull origin master
             git status
-            # docker-compose exec php php artisan config:cache
-            # docker-compose exec php php artisan route:cache
-            # docker-compose exec php php artisan view:cache
-            docker exec apps_php_1 php artisan config:cache
-            docker exec apps_php_1 php artisan route:cache
-            docker exec apps_php_1 php artisan view:cache
+            docker-compose exec php php artisan config:cache
+            docker-compose exec php php artisan route:cache
+            docker-compose exec php php artisan view:cache
+            docker-compose exec php chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
             docker-compose down
             docker-compose up -d
