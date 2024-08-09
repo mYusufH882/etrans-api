@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::post('/login', AuthController::class);
-Route::get('/info', [InfoAppController::class, 'index']);
 
 Route::middleware('auth:api')->group(function() {
     Route::get('/user', [AuthController::class, 'userProfile']);
