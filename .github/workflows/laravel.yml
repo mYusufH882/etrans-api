@@ -62,6 +62,7 @@ jobs:
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         run: php artisan test
       - name: Deploy to VPS
+        if: github.ref == 'refs/heads/master'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -72,8 +73,8 @@ jobs:
             cd /home/yusufprog/apps/etrans-api
             git pull origin master
             git status
-            docker-compose run --rm php php artisan config:cache
-            docker-compose run --rm php php artisan route:cache
-            docker-compose run --rm php php artisan view:cache
+            docker-compose exec php php artisan config:cache
+            docker-compose exec php php artisan route:cache
+            docker-compose exec php php artisan view:cache
             docker-compose down
             docker-compose up -d
