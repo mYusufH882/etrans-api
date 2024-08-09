@@ -75,5 +75,5 @@ jobs:
             docker-compose run --rm php php artisan config:cache
             docker-compose run --rm php php artisan route:cache
             docker-compose run --rm php php artisan view:cache
-            # docker-compose down
-            # docker-compose up -d
+            docker-compose down
+            docker-compose up -d
