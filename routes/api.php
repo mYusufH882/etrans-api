@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\BarangController;
 use App\Http\Controllers\API\CustomerController;
+use App\Http\Controllers\API\InfoController;
 use App\Http\Controllers\API\SalesController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::post('/login', AuthController::class);
+Route::get('/info', [InfoController::class, 'index']);
 
 Route::middleware('auth:api')->group(function() {
     Route::get('/user', [AuthController::class, 'userProfile']);
