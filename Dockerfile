@@ -10,6 +10,3 @@ WORKDIR /var/www/html
 
 RUN chmod -R 775 /var/www/html/storage &&  chmod -R 775 /var/www/html/bootstrap/cache
 RUN chown -R www-data:www-data /var/www/html/storage && chown -R www-data:www-data /var/www/html/bootstrap/cache
-
-RUN php artisan migrate --force
-RUN php artisan db:seed --class=UserSeeder --force
