@@ -74,9 +74,6 @@ jobs:
             git config --global --add safe.directory /home/yusufprog/apps/etrans-api
             git pull origin master
             git status
-            git log -1
-
-            chmod -R u+rwX /home/yusufprog/apps/etrans-api
 
             docker-compose exec php chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
             docker-compose exec php chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
