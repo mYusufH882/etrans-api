@@ -71,6 +71,8 @@ jobs:
           port: 22
           script: |
             cd /home/yusufprog/apps/etrans-api
+            sudo chown -R $USER:$USER /home/yusufprog/apps/etrans-api
+            sudo chmod -R u+rwX /home/yusufprog/apps/etrans-api
             git config --global --add safe.directory /home/yusufprog/apps/etrans-api
             git pull origin master
             git status
