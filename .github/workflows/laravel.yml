@@ -71,6 +71,7 @@ jobs:
           port: 22
           script: |
             cd /home/yusufprog/apps/etrans-api
+            git config --global --add safe.directory /home/yusufprog/apps/etrans-api
             git pull origin master
             git status
             git log -1
