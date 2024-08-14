@@ -41,9 +41,9 @@ class CustomerController extends Controller
 
         try {
             $request->validate([
-                'kode' => 'required|unique:m_customer|max:10',
-                'name' => 'required|string|max:100',
-                'telp' => 'required|string|max:20'
+                'kode' => ['required','unique:m_customer,kode','max:10'],
+                'name' => ['required','string','max:100'],
+                'telp' => ['required','string','max:20']
             ]);
 
             $data = [
@@ -108,9 +108,9 @@ class CustomerController extends Controller
             $customer = Customer::find($id);
 
             $request->validate([
-                'kode' => 'string|max:10',
-                'name' => 'string|max:100',
-                'telp' => 'string|max:20'
+                'kode' => ['string','unique:m_customer,kode','max:10'],
+                'name' => ['string','max:100'],
+                'telp' => ['string','max:20']
             ]);
 
             $data = [

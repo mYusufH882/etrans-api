@@ -41,9 +41,9 @@ class BarangController extends Controller
 
         try {
             $request->validate([
-                'kode' => 'required|unique:m_customer|max:10',
-                'nama' => 'required|string|max:100',
-                'harga' => 'required|numeric'
+                'kode' => ['required','unique:m_barang,kode','max:10'],
+                'nama' => ['required','string','max:100'],
+                'harga' => ['required','numeric']
             ]);
     
             DB::commit();
@@ -103,9 +103,9 @@ class BarangController extends Controller
             $barang = Barang::find($id);
 
             $request->validate([
-                'kode' => 'unique:m_customer|max:10',
-                'nama' => 'string|max:100',
-                'harga' => 'numeric'
+                'kode' => ['unique:m_barang,kode','max:10'],
+                'nama' => ['string','max:100'],
+                'harga' => ['numeric']
             ]);
 
             DB::commit();
