@@ -11,7 +11,7 @@ class InfoController extends Controller
     {
         return response()->json([
             'status' => 200,
-            'message' => 'Info Simple Application v1.1.0x'
+            'message' => 'E-Trans v1.1.0x App Available'
         ], 200);
     }
 }
