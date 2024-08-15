@@ -33,6 +33,7 @@ Route::middleware('auth:api')->group(function() {
     
     Route::get('/transactions', [SalesController::class, 'getTransaction']);
     Route::post('/transactions', [SalesController::class, 'storeTransaction']);
+    Route::get('/transactions-detail/{id}', [SalesController::class, 'detailTransactions']);
 
     Route::get('/last-transaction-number', [SalesController::class, 'getLastTransactionNumber']);
 

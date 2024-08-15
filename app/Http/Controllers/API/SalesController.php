@@ -63,6 +63,28 @@ class SalesController extends Controller
         ]);
     }
 
+    public function detailTransactions(Request $request, $id)
+    {
+        $tran = Sales::with(['customer', 'details'])->find($id);
+
+        if(!$tran) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Transaksi tidak ditemukan !',
+            ], 401);
+        }
+        
+        $tran->makeHidden(['cust_id']);
+        $tran->customer->makeHidden(['id', 'created_at', 'updated_at']);
+        $tran->details->makeHidden(['id', 'sales_id', 'barang_id', 'created_at', 'updated_at']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Detail Transaksi',
+            'data' => $tran
+        ]);
+    }
+
     public function storeTransaction(Request $request)
     {
         DB::beginTransaction();
@@ -135,7 +157,6 @@ class SalesController extends Controller
             ]);
         }
     }
-
     public function getLastTransactionNumber()
     {
         $lastTransaction = Sales::orderBy('created_at', 'DESC')->first();
