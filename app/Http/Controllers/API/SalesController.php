@@ -43,7 +43,7 @@ class SalesController extends Controller
 
         $sales->each(function($item) {
             $item->makeHidden([
-                'id', 'kode', 'tgl', 'cust_id', 'total_bayar', 'created_at', 'updated_at', 'customer'
+                'kode', 'tgl', 'cust_id', 'total_bayar', 'created_at', 'updated_at', 'customer'
             ]);
 
             $item->no_transaksi = $item->kode;
