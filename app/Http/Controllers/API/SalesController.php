@@ -39,7 +39,7 @@ class SalesController extends Controller
             });
         }
 
-        $sales = $sale->with('customer', 'details.barang')->get();
+        $sales = $sale->distinct('id')->with('customer', 'details.barang')->get();
 
         $sales->each(function($item) {
             $item->makeHidden([
@@ -49,9 +49,10 @@ class SalesController extends Controller
             $item->no_transaksi = $item->kode;
             $item->tanggal = $item->tgl;
             $item->nama_customer = $item->customer->name;
+            $item->total = $item->total_bayar;
 
             $item->details->each(function($detail) {
-                $detail->makeHidden(['qty', 'harga_bandrol', 'diskon_pct', 'diskon_nilai', 'harga_diskon', 'barang', 'created_at', 'updated_at']);
+                $detail->makeHidden(['qty', 'harga_bandrol', 'diskon_pct', 'diskon_nilai', 'harga_diskon', 'created_at', 'updated_at']);
                 $detail->jumlah_barang = $detail->qty;
             });
         });
@@ -63,9 +64,9 @@ class SalesController extends Controller
         ]);
     }
 
-    public function detailTransactions(Request $request, $id)
+    public function detailTransactions($id)
     {
-        $tran = Sales::with(['customer', 'details'])->find($id);
+        $tran = Sales::with(['customer', 'details', 'details.barang'])->find($id);
 
         if(!$tran) {
             return response()->json([
