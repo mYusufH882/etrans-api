@@ -54,22 +54,16 @@ class BarangController extends Controller
                 'message' => 'Barang berhasil dibuat.',
                 'data' => $barang
             ]);
-        }  catch(ValidationException $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            
+    
+            $statusCode = $e instanceof ValidationException ? 422 : 500;
+    
             return response()->json([
-                'status' => 422,
-                'message' => 'Internal Server Error.',
-                'error' => $e->errors()
-            ], 422);
-        } catch(Exception $e) {
-            DB::rollBack();
-            
-            return response()->json([
-                'status' => 500,
-                'message' => 'Internal Sever Error',
-                'error' => $e->getMessage()
-            ]);
+                'status' => $statusCode,
+                'message' => $statusCode === 422 ? 'Data validation failed.' : 'Internal Server Error.',
+                'error' => $statusCode === 422 ? $e->errors() : $e->getMessage()
+            ], $statusCode);
         }
 
     }
@@ -103,7 +97,7 @@ class BarangController extends Controller
             $barang = Barang::find($id);
 
             $request->validate([
-                'kode' => ['unique:m_barang,kode','max:10'],
+                'kode' => ['max:10'],
                 'nama' => ['string','max:100'],
                 'harga' => ['numeric']
             ]);
@@ -116,22 +110,16 @@ class BarangController extends Controller
                 'message' => 'Barang berhasil diubah.',
                 'data' => $barang
             ]);
-        }  catch(ValidationException $e) {
+        } catch (Exception $e) {
             DB::rollBack();
-            
+    
+            $statusCode = $e instanceof ValidationException ? 422 : 500;
+    
             return response()->json([
-                'status' => 422,
-                'message' => 'Internal Server Error.',
-                'error' => $e->errors()
-            ], 422);
-        } catch(Exception $e) {
-            DB::rollBack();
-            
-            return response()->json([
-                'status' => 500,
-                'message' => 'Internal Sever Error',
-                'error' => $e->getMessage()
-            ]);
+                'status' => $statusCode,
+                'message' => $statusCode === 422 ? 'Data validation failed.' : 'Internal Server Error.',
+                'error' => $statusCode === 422 ? $e->errors() : $e->getMessage()
+            ], $statusCode);
         }
     }
 

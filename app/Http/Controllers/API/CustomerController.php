@@ -60,22 +60,16 @@ class CustomerController extends Controller
                 'message' => 'Customer berhasil ditambahkan.',
                 'data' => $customer
             ]);
-        } catch (ValidationException $e) {
-            DB::rollBack();
-
-            return response()->json([
-                'status' => 422,
-                'message' => 'Internal Server Error.',
-                'error' => $e->errors()
-            ], 422);
         } catch (Exception $e) {
             DB::rollBack();
-
+    
+            $statusCode = $e instanceof ValidationException ? 422 : 500;
+    
             return response()->json([
-                'status' => 500,
-                'message' => 'Internal Sever Error',
-                'error' => $e->getMessage()
-            ]);
+                'status' => $statusCode,
+                'message' => $statusCode === 422 ? 'Data validation failed.' : 'Internal Server Error.',
+                'error' => $statusCode === 422 ? $e->errors() : $e->getMessage()
+            ], $statusCode);
         }
     }
 
@@ -108,7 +102,7 @@ class CustomerController extends Controller
             $customer = Customer::find($id);
 
             $request->validate([
-                'kode' => ['string','unique:m_customer,kode','max:10'],
+                'kode' => ['string','max:10'],
                 'name' => ['string','max:100'],
                 'telp' => ['string','max:20']
             ]);
@@ -127,22 +121,16 @@ class CustomerController extends Controller
                 'message' => 'Customer berhasil diubah.',
                 'data' => $customer
             ]);
-        } catch (ValidationException $e) {
-            DB::rollBack();
-
-            return response()->json([
-                'status' => 422,
-                'message' => 'Internal Server Error.',
-                'error' => $e->errors()
-            ], 422);
         } catch (Exception $e) {
             DB::rollBack();
-
+    
+            $statusCode = $e instanceof ValidationException ? 422 : 500;
+    
             return response()->json([
-                'status' => 500,
-                'message' => 'Internal Sever Error',
-                'error' => $e->getMessage()
-            ]);
+                'status' => $statusCode,
+                'message' => $statusCode === 422 ? 'Data validation failed.' : 'Internal Server Error.',
+                'error' => $statusCode === 422 ? $e->errors() : $e->getMessage()
+            ], $statusCode);
         }
     }
 
