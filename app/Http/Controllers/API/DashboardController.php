@@ -20,9 +20,9 @@ class DashboardController extends Controller
 
         $info = [
             'cards' => [
-                'jumlah_barang' => $data->jumlah_barang,
-                'jumlah_customer' => $data->jumlah_customer,
-                'jumlah_transaksi' => $data->jumlah_transaksi,
+                'jumlah_barang' => $data->jumlah_barang ?? null,
+                'jumlah_customer' => $data->jumlah_customer ?? null,
+                'jumlah_transaksi' => $data->jumlah_transaksi ?? null,
             ],
             'statistic' => 0
         ];
