@@ -19,7 +19,11 @@ class DashboardController extends Controller
             ->first();
 
         $info = [
-            'cards' => $data,
+            'cards' => [
+                'jumlah_barang' => $data->jumlah_barang,
+                'jumlah_customer' => $data->jumlah_customer,
+                'jumlah_transaksi' => $data->jumlah_transaksi,
+            ],
             'statistic' => 0
         ];
 
