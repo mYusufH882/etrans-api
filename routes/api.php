@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\BarangController;
 use App\Http\Controllers\API\CustomerController;
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\InfoController;
 use App\Http\Controllers\API\SalesController;
 use App\Http\Controllers\Auth\AuthController;
@@ -27,6 +28,8 @@ Route::get('/info', [InfoController::class, 'index']);
 
 Route::middleware('auth:api')->group(function() {
     Route::get('/user', [AuthController::class, 'userProfile']);
+
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 
     Route::apiResource('barang', BarangController::class);
     Route::apiResource('customer', CustomerController::class);
