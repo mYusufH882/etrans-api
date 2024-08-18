@@ -42,7 +42,7 @@ class SalesController extends Controller
             });
         }
 
-        $sales = $sale->distinct('id')->with('customer', 'details.barang')->get();
+        $sales = $sale->distinct('id')->with(['customer', 'details.barang'])->get();
 
         $sales->each(function($item) {
             $item->makeHidden([
