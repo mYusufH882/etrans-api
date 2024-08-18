@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    use ApiResponse;
+
     public function index()
     {
         $data = DB::table('m_barang')
@@ -27,9 +30,6 @@ class DashboardController extends Controller
             'statistic' => 0
         ];
 
-        return response()->json([
-            'status' => 200,
-            'data' => $info 
-        ]);
+        return $this->successResponse($info, "Dashboard Views Analytic");
     }
 }

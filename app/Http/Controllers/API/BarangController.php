@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Barang;
+use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class BarangController extends Controller
 {
+    use ApiResponse;
     /**
      * Display a listing of the resource.
      */
@@ -25,11 +27,7 @@ class BarangController extends Controller
 
         $barangs = $barangQuery->get();
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Daftar Data Barang',
-            'data' => $barangs
-        ]);
+        return $this->successResponse($barangs, 'Daftar Data Barang');
     }
 
     /**
@@ -49,21 +47,11 @@ class BarangController extends Controller
             DB::commit();
             $barang = Barang::create($request->all());
     
-            return response()->json([
-                'status' => 200,
-                'message' => 'Barang berhasil dibuat.',
-                'data' => $barang
-            ]);
+            return $this->successResponse($barang, 'Barang berhasil dibuat.');
         } catch (Exception $e) {
             DB::rollBack();
     
-            $statusCode = $e instanceof ValidationException ? 422 : 500;
-    
-            return response()->json([
-                'status' => $statusCode,
-                'message' => $statusCode === 422 ? 'Data validation failed.' : 'Internal Server Error.',
-                'error' => $statusCode === 422 ? $e->errors() : $e->getMessage()
-            ], $statusCode);
+            return $this->handleApiException($e);
         }
 
     }
@@ -72,16 +60,9 @@ class BarangController extends Controller
     {
         $barangs = Barang::find($id);
         if(!$barangs)  {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Barang tidak ditemukan !'
-            ], 401);
+            return $this->failedResponse('Barang Tidak Ditemukan!!!');
         } else {
-            return response()->json([
-                'status' => 200,
-                'message' => 'Barang Ditemukan.',
-                'data' => $barangs
-            ], 200);
+            return $this->successResponse($barangs, 'Barang Ditemukan.');
         }
 
     } 
@@ -105,21 +86,11 @@ class BarangController extends Controller
             DB::commit();
             $barang->update($request->all());
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Barang berhasil diubah.',
-                'data' => $barang
-            ]);
+            return $this->successResponse($barang, 'Barang Berhasil Diubah.');
         } catch (Exception $e) {
             DB::rollBack();
     
-            $statusCode = $e instanceof ValidationException ? 422 : 500;
-    
-            return response()->json([
-                'status' => $statusCode,
-                'message' => $statusCode === 422 ? 'Data validation failed.' : 'Internal Server Error.',
-                'error' => $statusCode === 422 ? $e->errors() : $e->getMessage()
-            ], $statusCode);
+            return $this->handleApiException($e);
         }
     }
 
@@ -137,19 +108,10 @@ class BarangController extends Controller
             DB::commit();
             $barang->delete();
     
-            return response()->json([
-                'status' => 200,
-                'message' => 'Barang berhasil dihapus',
-                'data' => $barang
-            ]);
+            return $this->successResponse($barang, 'Barang Berhasil Dihapus.');
         } catch(Exception $e) {
             DB::rollBack();
-            
-            return response()->json([
-                'status' => 500,
-                'message' => 'Internal Sever Error',
-                'error' => $e->getMessage()
-            ]);
+            return $this->errorResponse($e->getMessage(), 'Internal Server Error');
         }
     }
 }
