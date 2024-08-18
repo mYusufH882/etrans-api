@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Sales;
 use App\Models\Sales_Det;
+use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,8 @@ use Illuminate\Validation\ValidationException;
 
 class SalesController extends Controller
 {
+    use ApiResponse;
+
     public function getTransaction(Request $request)
     {
         $filters = $request->all();
@@ -57,11 +60,7 @@ class SalesController extends Controller
             });
         });
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Daftar Transaksi',
-            'data' => $sales
-        ]);
+        return $this->successResponse($sales, "Daftar Transaksi.");
     }
 
     public function detailTransactions($id)
@@ -69,21 +68,14 @@ class SalesController extends Controller
         $tran = Sales::with(['customer', 'details', 'details.barang'])->find($id);
 
         if(!$tran) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Transaksi tidak ditemukan !',
-            ], 401);
+            return $this->failedResponse("Transaksi Tidak Ditemukan!!!");
         }
         
         $tran->makeHidden(['cust_id']);
         $tran->customer->makeHidden(['id', 'created_at', 'updated_at']);
         $tran->details->makeHidden(['id', 'sales_id', 'barang_id', 'created_at', 'updated_at']);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Detail Transaksi',
-            'data' => $tran
-        ]);
+        return $this->successResponse($tran, "Detail Transaksi.");
     }
 
     public function storeTransaction(Request $request)
@@ -135,27 +127,15 @@ class SalesController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Transaksi berhasil dibuat.',
-                'data' => $sale
-            ]);
+            return $this->successResponse($sale, "Transaksi Berhasil Dibuat.");
         } catch(ValidationException $e) {
             DB::rollBack();
             
-            return response()->json([
-                'status' => 422,
-                'message' => 'Internal Server Error.',
-                'error' => $e->errors()
-            ], 422);
+            return $this->handleApiException($e);
         } catch(Exception $e) {
             DB::rollBack();
 
-            return response()->json([
-                'status' => 500,
-                'message' => 'Internal Server Error.',
-                'error' => $e->getMessage()
-            ]);
+            return $this->errorResponse($e->getMessage(), "Internal Server Error");
         }
     }
     public function getLastTransactionNumber()
@@ -168,10 +148,6 @@ class SalesController extends Controller
             $lastNumber = null;
         }
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Berhasil Mendapatkan Nomor Transaksi Terakhir',
-            'data' => $lastNumber
-        ]);
+        return $this->successResponse($lastNumber, "Berhasil Mendapatkan Nomor Transaksi Terakhir");
     }
 }

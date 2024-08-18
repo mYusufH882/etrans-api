@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class CustomerController extends Controller
 {
+    use ApiResponse;
     /**
      * Display a listing of the resource.
      */
@@ -25,11 +27,7 @@ class CustomerController extends Controller
 
         $customers = $customerQuery->get();
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Daftar Data Customer',
-            'data' => $customers
-        ]);
+        return $this->successResponse($customers, 'Daftar Data Customer.');
     }
 
     /**
@@ -55,21 +53,11 @@ class CustomerController extends Controller
             DB::commit();
             $customer = Customer::create($data);
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Customer berhasil ditambahkan.',
-                'data' => $customer
-            ]);
+            return $this->successResponse($customer, "Customer Berhasil Ditambahkan.");
         } catch (Exception $e) {
             DB::rollBack();
     
-            $statusCode = $e instanceof ValidationException ? 422 : 500;
-    
-            return response()->json([
-                'status' => $statusCode,
-                'message' => $statusCode === 422 ? 'Data validation failed.' : 'Internal Server Error.',
-                'error' => $statusCode === 422 ? $e->errors() : $e->getMessage()
-            ], $statusCode);
+            return $this->handleApiException($e);
         }
     }
 
@@ -78,16 +66,9 @@ class CustomerController extends Controller
         $customers = Customer::find($id);
 
         if (!$customers) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Customer tidak ditemukan !'
-            ], 401);
+            return $this->failedResponse("Customer Tidak Ditemukan!!!");
         } else {
-            return response()->json([
-                'status' => 200,
-                'message' => 'Customer Ditemukan.',
-                'data' => $customers
-            ], 200);
+            return $this->successResponse($customers, "Customer Berhasil Ditemukan.");
         }
     }
 
@@ -116,21 +97,11 @@ class CustomerController extends Controller
             DB::commit();
             $customer->update($data);
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Customer berhasil diubah.',
-                'data' => $customer
-            ]);
+            return $this->successResponse($customer, "Customer Berhasil Diubah.");
         } catch (Exception $e) {
             DB::rollBack();
     
-            $statusCode = $e instanceof ValidationException ? 422 : 500;
-    
-            return response()->json([
-                'status' => $statusCode,
-                'message' => $statusCode === 422 ? 'Data validation failed.' : 'Internal Server Error.',
-                'error' => $statusCode === 422 ? $e->errors() : $e->getMessage()
-            ], $statusCode);
+            return $this->handleApiException($e);
         }
     }
 
@@ -147,19 +118,11 @@ class CustomerController extends Controller
             DB::commit();
             $customer->delete();
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'Customer berhasil dihapus.',
-                'data' => $customer
-            ]);
+            return $this->successResponse($customer, "Customer Berhasil Dihapus.");
         } catch (Exception $e) {
             DB::rollBack();
 
-            return response()->json([
-                'status' => 500,
-                'message' => 'Internal Sever Error',
-                'error' => $e->getMessage()
-            ]);
+            return $this->errorResponse($e->getMessage(), "Internal Server Error");
         }
     }
 }
